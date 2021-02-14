@@ -110,153 +110,173 @@ import { ElMessage } from 'element-plus'
 import { ListQuery, TableList, DataList } from '../typings'
 
 export default defineComponent({
-  name: 'goodlist',
-  setup () {
-    const status = ref(false)
-    const formData = reactive<TableList>({
-      id: '',
-      goodsName: '',
-      englishName: '',
-      shortName: '',
-      goodsDesc: '',
-      goodsbrand: '',
-      goodsSpec: ''
-    })
-    const visible = ref(false)
-    const ruleForm = ref<any>(null)
-    const rules = {
-      id: [{ required: true, message: '请输入商品id', trigger: 'blur' }],
-      goodsName: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
-      englishName: [{ required: true, message: '请输入商品英文名称', trigger: 'blur' }],
-      shortName: [{ required: true, message: '请输入商品简称', trigger: 'blur' }],
-      goodsDesc: [{ required: true, message: '请输入商品描述', trigger: 'blur' }],
-      goodsbrand: [{ required: true, message: '请输入商品品牌', trigger: 'blur' }],
-      goodsSpec: [{ required: true, message: '请输入商品规格', trigger: 'blur' }]
-    }
-    const addData = () => {
-      visible.value = true
-      status.value = false
-      formData.id = ''
-      formData.goodsName = ''
-      formData.englishName = ''
-      formData.shortName = ''
-      formData.goodsDesc = ''
-      formData.goodsbrand = ''
-      formData.goodsSpec = ''
-    }
-    const handleEdit = (row: TableList) => {
-      visible.value = true
-      status.value = true
-      formData.id = row.id
-      formData.goodsName = row.goodsName
-      formData.englishName = row.englishName
-      formData.shortName = row.shortName
-      formData.goodsDesc = row.goodsDesc
-      formData.goodsbrand = row.goodsbrand
-      formData.goodsSpec = row.goodsSpec
-    }
-    const handleCloseDialog = () => {
-      formData.id = ''
-      formData.goodsName = ''
-      formData.englishName = ''
-      formData.shortName = ''
-      formData.goodsDesc = ''
-      formData.goodsbrand = ''
-      formData.goodsSpec = ''
-      ruleForm.value.resetFields()
-      visible.value = false
-    }
-    const currentPage = ref<number>(1)
-    const loading = ref<boolean>(false)
-    const total = ref<number>(1)
-    const tableList = ref<TableList[]>(null)
-    const listQuery = reactive<ListQuery>({
-      pageNo: 1, // 当前页码
-      pageSize: 10, // 单页显示数量
-      goodsName: '' // 项目名称
-    })
-    const getDataList = () =>
-      getList<DataList>(listQuery)
-        .then((res) => {
-          tableList.value = res.data.list
-          total.value = res.data.totalCount
+    name: 'goodlist',
+    props: {
+        msg: {
+            required: true,
+            default: () => [],
+            type: String,
+        },
+    },
+    setup(props) {
+        const status = ref(false)
+        const formData = reactive<TableList>({
+            id: '',
+            goodsName: '',
+            englishName: '',
+            shortName: '',
+            goodsDesc: '',
+            goodsbrand: '',
+            goodsSpec: '',
         })
-        .finally(() => {
-          loading.value = false
-        })
-    const handleDelete = (val: string) => {
-      deleteItem<DataList>({ id: val }).then(() => {
-        ElMessage.success({
-          message: '删除成功',
-          type: 'success'
-        })
-        getDataList()
-      })
-    }
-    const handleAdd = (val: TableList) => {
-      addItem<DataList>(val).then(() => {
-        ElMessage.success({
-          message: '添加成功',
-          type: 'success'
-        })
-        getDataList()
-      })
-    }
-    const updateData = (val: TableList) => {
-      updateItem<DataList>(val).then(() => {
-        ElMessage.success({
-          message: '修改成功',
-          type: 'success'
-        })
-        getDataList()
-      })
-    }
-    // 提交表单
-    const submitDialog = () => {
-      ruleForm.value.validate((valid: boolean) => {
-        if (!valid) return false
-        if (status.value) {
-          visible.value = false
-          updateData(formData)
-        } else {
-          visible.value = false
-          handleAdd(formData)
+        const visible = ref(false)
+        const ruleForm = ref<any>(null)
+        const rules = {
+            id: [{ required: true, message: '请输入商品id', trigger: 'blur' }],
+            goodsName: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
+            englishName: [{ required: true, message: '请输入商品英文名称', trigger: 'blur' }],
+            shortName: [{ required: true, message: '请输入商品简称', trigger: 'blur' }],
+            goodsDesc: [{ required: true, message: '请输入商品描述', trigger: 'blur' }],
+            goodsbrand: [{ required: true, message: '请输入商品品牌', trigger: 'blur' }],
+            goodsSpec: [{ required: true, message: '请输入商品规格', trigger: 'blur' }]
         }
-      })
-    }
-    onMounted(() => {
-      loading.value = true
-      getDataList()
-    })
-    const searchFn = () => {
-      getDataList()
-    }
-    const handleCurrentChange = (val: number) => {
-      listQuery.pageNo = val
-      getDataList()
-    }
-    return {
-      status,
-      visible,
-      ruleForm,
-      currentPage,
-      getList,
-      rules,
-      tableList,
-      formData,
-      listQuery,
-      getDataList,
-      handleCurrentChange,
-      searchFn,
-      loading,
-      total,
-      handleDelete,
-      handleEdit,
-      handleCloseDialog,
-      submitDialog,
-      addData
-    }
-  }
+        const addData = () => {
+            visible.value = true
+            status.value = false
+            formData.id = ''
+            formData.goodsName = ''
+            formData.englishName = ''
+            formData.shortName = ''
+            formData.goodsDesc = ''
+            formData.goodsbrand = ''
+            formData.goodsSpec = ''
+        }
+        const handleEdit = (row: TableList) => {
+            visible.value = true
+            status.value = true
+            formData.id = row.id
+            formData.goodsName = row.goodsName
+            formData.englishName = row.englishName
+            formData.shortName = row.shortName
+            formData.goodsDesc = row.goodsDesc
+            formData.goodsbrand = row.goodsbrand
+            formData.goodsSpec = row.goodsSpec
+        }
+        const handleCloseDialog = () => {
+            formData.id = ''
+            formData.goodsName = ''
+            formData.englishName = ''
+            formData.shortName = ''
+            formData.goodsDesc = ''
+            formData.goodsbrand = ''
+            formData.goodsSpec = ''
+            ruleForm.value.resetFields()
+            visible.value = false
+        }
+        const currentPage = ref<number>(1)
+        const loading = ref<boolean>(false)
+        const total = ref<number>(1)
+        const tableList = ref<TableList[]>([
+            {
+                id: '',
+                goodsName: '',
+                englishName: '',
+                shortName: '',
+                goodsDesc: '',
+                goodsbrand: '',
+                goodsSpec: '',
+            },
+        ])
+        const listQuery = reactive<ListQuery>({
+            pageNo: 1, // 当前页码
+            pageSize: 10, // 单页显示数量
+            goodsName: '', // 项目名称
+        })
+        const getDataList = () => {
+            getList<DataList>(listQuery)
+                .then((res) => {
+                    tableList.value = res.data.list
+                    total.value = res.data.totalCount
+                })
+                .finally(() => {
+                    loading.value = false
+                })
+        }
+        const handleDelete = (val: string) => {
+            deleteItem<DataList>({ id: val }).then(() => {
+                ElMessage.success({
+                    message: '删除成功',
+                    type: 'success',
+                })
+                getDataList()
+            })
+        }
+        const handleAdd = (val: TableList) => {
+            addItem<DataList>(val).then(() => {
+                ElMessage.success({
+                    message: '添加成功',
+                    type: 'success',
+                })
+                getDataList()
+            })
+        }
+        const updateData = (val: TableList) => {
+            updateItem<DataList>(val).then(() => {
+                ElMessage.success({
+                    message: '修改成功',
+                    type: 'success',
+                })
+                getDataList()
+            })
+        }
+        // 提交表单
+        const submitDialog = () => {
+            ruleForm.value.validate((valid: boolean) => {
+                if (!valid) return false
+                if (status.value) {
+                    visible.value = false
+                    updateData(formData)
+                } else {
+                    visible.value = false
+                    handleAdd(formData)
+                }
+            })
+        }
+        onMounted(() => {
+            loading.value = true
+            console.log(props.msg, 444)
+            getDataList()
+        })
+        const searchFn = () => {
+            getDataList()
+        }
+        const handleCurrentChange = (val: number) => {
+            listQuery.pageNo = val
+            getDataList()
+        }
+
+        return {
+            status,
+            visible,
+            ruleForm,
+            currentPage,
+            getList,
+            rules,
+            tableList,
+            formData,
+            listQuery,
+            getDataList,
+            handleCurrentChange,
+            searchFn,
+            loading,
+            total,
+            handleDelete,
+            handleEdit,
+            handleCloseDialog,
+            submitDialog,
+            addData,
+        }
+    },
 })
 </script>
 <style scoped>
