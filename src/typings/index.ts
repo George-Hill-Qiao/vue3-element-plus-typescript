@@ -15,11 +15,11 @@ export interface ListQuery {
 export interface IdQuery {
     id: string;
 }
-export interface DataList {
+export interface DataList<T> {
     code: string;
     msg: string;
     data: {
-        list: TableList[];
+        list: T[];
         ageNo: string;
         pageSize: string;
         totalCount: number;
