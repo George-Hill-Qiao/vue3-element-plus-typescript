@@ -176,7 +176,7 @@ export default defineComponent({
       goodsName: '' // 项目名称
     })
     const getDataList = () =>
-      getList<DataList>(listQuery)
+      getList<DataList<TableList>>(listQuery)
         .then((res) => {
           tableList.value = res.data.list
           total.value = res.data.totalCount
@@ -185,7 +185,7 @@ export default defineComponent({
           loading.value = false
         })
     const handleDelete = (val: string) => {
-      deleteItem<DataList>({ id: val }).then(() => {
+      deleteItem<DataList<TableList>>({ id: val }).then(() => {
         ElMessage.success({
           message: '删除成功',
           type: 'success'
@@ -194,7 +194,7 @@ export default defineComponent({
       })
     }
     const handleAdd = (val: TableList) => {
-      addItem<DataList>(val).then(() => {
+      addItem<DataList<TableList>>(val).then(() => {
         ElMessage.success({
           message: '添加成功',
           type: 'success'
@@ -203,7 +203,7 @@ export default defineComponent({
       })
     }
     const updateData = (val: TableList) => {
-      updateItem<DataList>(val).then(() => {
+      updateItem<DataList<TableList>>(val).then(() => {
         ElMessage.success({
           message: '修改成功',
           type: 'success'
